@@ -16,6 +16,8 @@ import java.util.List;
 
 public class GltfConvertHelper {
 
+    private static LogHelper log = LogHelper.getLog();
+
     public static void main(String[] args) throws Exception {
         String s = "C:\\Users\\lin.xia\\Documents\\rooomy\\gltf";
         String input = s;
@@ -30,6 +32,8 @@ public class GltfConvertHelper {
         String backup = input + "_" + getTimestamp();
         backup(input, backup);
         List<String> zipFiles = FileHelper.getDestZipFiles(backup);
+        int success = 0;
+        int failed = 0;
         for (String zipFile : zipFiles) {
             if (zipFile.endsWith(".zip")) {
                 try {
@@ -37,12 +41,18 @@ public class GltfConvertHelper {
                     unzip(zipFile);
                     startConvert(zipExtractFolder);
                     zip(zipExtractFolder);
+                    success ++;
+                    log.info(ZipHelper.getFileName(zipFile));
                     System.out.println("Success convert:" + zipFile);
                 } catch (Exception e) {
+                    failed++;
                     System.out.println("Failed to convert:" + zipFile);
                 }
             }
         }
+        log.info("Found zip files number:" + zipFiles.size());
+        log.info("Failed convert zip files number:" + failed);
+        log.info("Sucess convert zip files number:" + success);
     }
 
     private static void backup(String input, String backup) throws IOException {

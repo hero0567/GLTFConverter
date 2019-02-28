@@ -2,7 +2,10 @@ package com.rooomy.gui;
 
 import com.rooomy.listener.FileChooseListener;
 import com.rooomy.listener.FileDropListener;
+import com.rooomy.util.GltfConvertHelper;
 import com.rooomy.util.GltfHelper;
+import com.rooomy.util.LogHelper;
+import com.sun.deploy.util.StringUtils;
 
 import javax.swing.*;
 import java.awt.dnd.DnDConstants;
@@ -15,6 +18,8 @@ public class MainPage extends JPanel {
     private static final long serialVersionUID = 1L;
     private JButton start_but, boli_but;
     private JTextField dragPathField, choosePathField;
+    private JTextArea logTextArea;
+    private LogHelper log = LogHelper.getLog();
 
     public MainPage() {
         this.setLayout(null);
@@ -27,6 +32,7 @@ public class MainPage extends JPanel {
         tips.setBounds(170, 10, 400, 40);
         JLabel dragPath = new JLabel("File Path :");
         dragPath.setBounds(30, 80, 100, 40);
+
 
         dragPathField = new JTextField();
         dragPathField.setBounds(100, 80, 250, 40);
@@ -41,6 +47,13 @@ public class MainPage extends JPanel {
         boli_but = new JButton("Choose...");
         boli_but.setBounds(370, 150, 200, 40);
 
+        logTextArea = new JTextArea();
+        log.setLogTextArea(logTextArea);
+        JScrollPane jsp = new JScrollPane(logTextArea);
+        jsp.setBounds(50, 250, 520, 340);
+        jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        this.add(jsp);
         this.add(tips);
         this.add(dragPath);
         this.add(dragPathField);
@@ -58,32 +71,36 @@ public class MainPage extends JPanel {
         start_but.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                String fromPath = dragPathField.getText().trim();
-                if (fromPath != null && fromPath.isEmpty()) {
+                String dragPath = dragPathField.getText().trim();
+                String choosePath = choosePathField.getText().trim();
+                if (dragPath != null && dragPath.isEmpty() && choosePath != null && choosePath.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Please fill in all the conditions!", "Warning", JOptionPane.WARNING_MESSAGE);
                     return;
                 }
+
+                String path = null;
+
+
                 try {
                     JLabel running_label = new JLabel("Running ...    Please wait ...");
                     running_label.setBounds(130, 150, 300, 40);
                     add(running_label);
                     start_but.setEnabled(false);
                     repaint();
-
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                GltfHelper.convertGltf(fromPath);
-                                JOptionPane.showMessageDialog(MainPage.this, "The operation is done!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    new Thread(() -> {
+                        try {
+                            if (dragPath != null && dragPath.isEmpty()) {
+                                GltfConvertHelper.process(choosePath);
+                            } else {
+                                GltfConvertHelper.process(dragPath);
                             }
-                            remove(running_label);
-                            start_but.setEnabled(true);
-                            repaint();
+                            log.info("The operation is done!");
+                        } catch (Exception e) {
+                            log.info("The operation is abort!");
                         }
+                        remove(running_label);
+                        start_but.setEnabled(true);
+                        repaint();
                     }).start();
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

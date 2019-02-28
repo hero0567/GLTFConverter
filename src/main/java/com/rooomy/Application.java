@@ -12,7 +12,7 @@ public class Application extends JFrame{
 		super("ChangeJsonData-Amazon");
 		this.getContentPane().add(new MainPage());
 		
-		this.setSize(600,300);
+		this.setSize(620,650);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);	

@@ -12,7 +12,9 @@ public class ZipHelper {
 //        zip("C:\\Users\\lin.xia\\Documents\\rooomy\\test.zip", "C:\\Users\\lin.xia\\Documents\\rooomy\\test");
 //        unzip("C:\\Users\\lin.xia\\Documents\\rooomy\\test.zip", "C:\\Users\\lin.xia\\Documents\\rooomy");
 //        unzip("C:\\Users\\lin.xia\\Documents\\rooomy\\test.zip");
-        zip("C:\\Users\\lin.xia\\Documents\\rooomy\\test");
+//        zip("C:\\Users\\lin.xia\\Documents\\rooomy\\test");
+        String name = getFileName("test.zip");
+        System.out.println(name);
     }
 
     public static void zip(String zipFileName, String sourceFileName) throws Exception {
@@ -64,7 +66,7 @@ public class ZipHelper {
 
     public static void unzip(String zipFileName) throws IOException {
         File zipFile = new File(zipFileName);
-        if (!zipFile.exists()){
+        if (!zipFile.exists()) {
             System.out.println(zipFileName + " not found.");
             return;
         }
@@ -93,6 +95,11 @@ public class ZipHelper {
             zi.closeEntry();
         }
         zi.close();
-        System.out.println("Unzip successful " + zipFileName );
+        System.out.println("Unzip successful " + zipFileName);
+    }
+
+    public static String getFileName(String path) {
+        int lastIndex = path.lastIndexOf(File.separator);
+        return path.substring(lastIndex + File.separator.length(), path.length());
     }
 }
