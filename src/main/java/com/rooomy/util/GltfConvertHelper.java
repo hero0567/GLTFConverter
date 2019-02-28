@@ -22,16 +22,20 @@ public class GltfConvertHelper {
         String s = "C:\\Users\\lin.xia\\Documents\\rooomy\\gltf";
         String input = s;
         String backup = "C:\\Users\\lin.xia\\Documents\\rooomy\\gltf1";
-        process(s);
+        process(s, true);
 //        backup(input, backup);
 //
 //        Files.delete(Paths.get(backup));
     }
 
-    public static void process(String input) throws IOException {
-        String backup = input + "_" + getTimestamp();
-        backup(input, backup);
-        List<String> zipFiles = FileHelper.getDestZipFiles(backup);
+    public static void process(String input, boolean backup) throws IOException {
+        String path = input;
+        if (backup){
+            String backupPath = input + "_" + getTimestamp();
+            backup(input, backupPath);
+            path =backupPath;
+        }
+        List<String> zipFiles = FileHelper.getDestZipFiles(path);
         int success = 0;
         int failed = 0;
         for (String zipFile : zipFiles) {
@@ -42,10 +46,12 @@ public class GltfConvertHelper {
                     startConvert(zipExtractFolder);
                     zip(zipExtractFolder);
                     success ++;
-                    log.info(ZipHelper.getFileName(zipFile));
+                    log.info(ZipHelper.getFileName(zipFile) + "     ok ");
                     System.out.println("Success convert:" + zipFile);
                 } catch (Exception e) {
                     failed++;
+                    System.out.println(e);
+                    log.info(ZipHelper.getFileName(zipFile) + "     fail ");
                     System.out.println("Failed to convert:" + zipFile);
                 }
             }

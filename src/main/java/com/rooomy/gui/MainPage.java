@@ -3,9 +3,7 @@ package com.rooomy.gui;
 import com.rooomy.listener.FileChooseListener;
 import com.rooomy.listener.FileDropListener;
 import com.rooomy.util.GltfConvertHelper;
-import com.rooomy.util.GltfHelper;
 import com.rooomy.util.LogHelper;
-import com.sun.deploy.util.StringUtils;
 
 import javax.swing.*;
 import java.awt.dnd.DnDConstants;
@@ -16,9 +14,10 @@ import java.awt.event.ActionListener;
 public class MainPage extends JPanel {
 
     private static final long serialVersionUID = 1L;
-    private JButton start_but, boli_but;
+    private JButton startBut, fileChooseBut;
     private JTextField dragPathField, choosePathField;
     private JTextArea logTextArea;
+    private JCheckBox backupCheckBox;
     private LogHelper log = LogHelper.getLog();
 
     public MainPage() {
@@ -33,6 +32,9 @@ public class MainPage extends JPanel {
         JLabel dragPath = new JLabel("File Path :");
         dragPath.setBounds(30, 80, 100, 40);
 
+        backupCheckBox = new JCheckBox("创建新文件夹");
+        backupCheckBox.setBounds(370, 42, 300,30);
+        backupCheckBox.setSelected(true);
 
         dragPathField = new JTextField();
         dragPathField.setBounds(100, 80, 250, 40);
@@ -42,10 +44,10 @@ public class MainPage extends JPanel {
         choosePathField.setBounds(100, 150, 250, 40);
         choosePathField.setEditable(true);
 
-        start_but = new JButton("Convert");
-        start_but.setBounds(370, 80, 200, 40);
-        boli_but = new JButton("Choose...");
-        boli_but.setBounds(370, 150, 200, 40);
+        startBut = new JButton("Convert");
+        startBut.setBounds(370, 80, 200, 40);
+        fileChooseBut = new JButton("Choose...");
+        fileChooseBut.setBounds(370, 150, 200, 40);
 
         logTextArea = new JTextArea();
         log.setLogTextArea(logTextArea);
@@ -53,22 +55,25 @@ public class MainPage extends JPanel {
         jsp.setBounds(50, 250, 520, 340);
         jsp.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
+
+
         this.add(jsp);
         this.add(tips);
         this.add(dragPath);
         this.add(dragPathField);
         this.add(choosePathField);
-        this.add(start_but);
-        this.add(boli_but);
+        this.add(startBut);
+        this.add(fileChooseBut);
+        this.add(backupCheckBox);
 
     }
 
     private void completeLayout() {
         // 实现拖拽功能, 获取JPG文件
         new DropTarget(dragPathField, DnDConstants.ACTION_COPY_OR_MOVE, new FileDropListener(dragPathField));
-        boli_but.addActionListener(new FileChooseListener(choosePathField));
+        fileChooseBut.addActionListener(new FileChooseListener(choosePathField));
 
-        start_but.addActionListener(new ActionListener() {
+        startBut.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
                 String dragPath = dragPathField.getText().trim();
@@ -85,21 +90,25 @@ public class MainPage extends JPanel {
                     JLabel running_label = new JLabel("Running ...    Please wait ...");
                     running_label.setBounds(130, 150, 300, 40);
                     add(running_label);
-                    start_but.setEnabled(false);
+                    startBut.setEnabled(false);
                     repaint();
                     new Thread(() -> {
                         try {
+                            boolean backup = backupCheckBox.isSelected();
                             if (dragPath != null && dragPath.isEmpty()) {
-                                GltfConvertHelper.process(choosePath);
+                                GltfConvertHelper.process(choosePath, backup);
                             } else {
-                                GltfConvertHelper.process(dragPath);
+                                GltfConvertHelper.process(dragPath, backup);
                             }
                             log.info("The operation is done!");
+                            JOptionPane.showMessageDialog(MainPage.this, "The operation is done!", "Success", JOptionPane.INFORMATION_MESSAGE);
                         } catch (Exception e) {
+                            System.out.println(e);
                             log.info("The operation is abort!");
+                            JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         }
                         remove(running_label);
-                        start_but.setEnabled(true);
+                        startBut.setEnabled(true);
                         repaint();
                     }).start();
                 } catch (Exception e) {
