@@ -7,27 +7,63 @@ import com.rooomy.levy.convert.GltfToGlb;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class GltfConvertHelper {
 
+    public static void main(String[] args) throws Exception {
+        String s = "C:\\Users\\lin.xia\\Documents\\rooomy\\gltf";
+        String input = s;
+        String backup = "C:\\Users\\lin.xia\\Documents\\rooomy\\gltf1";
+        process(s);
+//        backup(input, backup);
+//
+//        Files.delete(Paths.get(backup));
+    }
+
     public static void process(String input) throws IOException {
-        unzip(input);
-        startConvert(input);
-        zip(input);
+        String backup = input + "_" + getTimestamp();
+        backup(input, backup);
+        List<String> zipFiles = FileHelper.getDestZipFiles(backup);
+        for (String zipFile : zipFiles) {
+            if (zipFile.endsWith(".zip")) {
+                try {
+                    String zipExtractFolder = zipFile.substring(0, zipFile.length() - 4);
+                    unzip(zipFile);
+                    startConvert(zipExtractFolder);
+                    zip(zipExtractFolder);
+                    System.out.println("Success convert:" + zipFile);
+                } catch (Exception e) {
+                    System.out.println("Failed to convert:" + zipFile);
+                }
+            }
+        }
     }
 
-    private static void unzip(String input){
-
+    private static void backup(String input, String backup) throws IOException {
+        System.out.println("Start backup:" + input);
+        FileHelper.copyDir(input, backup);
     }
 
-    private static void zip(String input){
+    private static void unzip(String input) throws IOException {
+        System.out.println("Start unzip:" + input);
+        ZipHelper.unzip(input);
+    }
 
+    private static void zip(String input) throws Exception {
+        System.out.println("Start zip:" + input);
+        ZipHelper.zip(input);
     }
 
     private static void startConvert(String input) throws IOException {
+        System.out.println("Start convert:" + input);
         List<String> gltfs = GltfToGlb.listGlftFiles(input);
-        for(String gltf : gltfs){
+        for (String gltf : gltfs) {
             convertGltf(gltf);
             generateGlb(gltf);
         }
@@ -35,18 +71,19 @@ public class GltfConvertHelper {
 
 
     private static void convertGltf(String gltf) throws IOException {
+        System.out.println("Start convert gltf:" + gltf);
         String json = readJsonData(gltf);
-        JSONObject dataJson = (JSONObject) JSONObject.parse(json, Feature.OrderedField);// 鍒涘缓涓�涓寘鍚師濮媕son涓茬殑json瀵硅薄
-        JSONArray nodes = dataJson.getJSONArray("nodes");// 鎵惧埌features鐨刯son鏁扮粍
-        JSONArray meshes = dataJson.getJSONArray("meshes");// 鎵惧埌features鐨刯son鏁扮粍
+        JSONObject dataJson = (JSONObject) JSONObject.parse(json, Feature.OrderedField);// 创建一个包含原始json串的json对象
+        JSONArray nodes = dataJson.getJSONArray("nodes");// 找到features的json数组
+        JSONArray meshes = dataJson.getJSONArray("meshes");// 找到features的json数组
         JSONObject jsonObject = nodes.getJSONObject(0);
         JSONObject addjsonObject = nodes.getJSONObject(2);
         JSONObject addjsonObject1 = null;
-        if (meshes.size() == 2){
+        if (meshes.size() == 2) {
             addjsonObject1 = nodes.getJSONObject(4);
         }
-        JSONArray translation = jsonObject.getJSONArray("translation");// 鎵惧埌features鐨刯son鏁扮粍
-        JSONArray scale = jsonObject.getJSONArray("scale");// 鎵惧埌features鐨刯son鏁扮粍
+        JSONArray translation = jsonObject.getJSONArray("translation");// 找到features的json数组
+        JSONArray scale = jsonObject.getJSONArray("scale");// 找到features的json数组
         JSONArray addJson = new JSONArray();
         double divide0 = GltfHelper.divide(translation.getDouble(0), scale.getDoubleValue(0));
         if (divide0 > 0 && divide0 < 0.000001) {
@@ -70,7 +107,7 @@ public class GltfConvertHelper {
         translation.set(1, 0.0);
         translation.set(2, 0.0);
         addjsonObject.put("translation", addJson);
-        if (meshes.size() == 2){
+        if (meshes.size() == 2) {
             addjsonObject1.put("translation", addJson);
         }
         String jsonString = dataJson.toJSONString();
@@ -98,5 +135,13 @@ public class GltfConvertHelper {
         }
         in.close();
         return strbuffer.toString();
+    }
+
+    private static String getTimestamp() {
+        Date d = new Date();
+        System.out.println(d);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String dateNowStr = sdf.format(d);
+        return dateNowStr;
     }
 }

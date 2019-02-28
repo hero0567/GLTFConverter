@@ -255,9 +255,7 @@ public class GltfHelper {
             fop.write(contentInBytes);
             fop.flush();
             fop.close();
-
             System.out.println("Done");
-
         } catch (IOException e) {
             e.printStackTrace();
         }

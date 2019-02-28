@@ -9,35 +9,43 @@ public class ZipHelper {
 
 
     public static void main(String[] args) throws Exception {
-        zip("D:\\ç”µå½±.zip", "F:\\ç”µå½±");
+//        zip("C:\\Users\\lin.xia\\Documents\\rooomy\\test.zip", "C:\\Users\\lin.xia\\Documents\\rooomy\\test");
+//        unzip("C:\\Users\\lin.xia\\Documents\\rooomy\\test.zip", "C:\\Users\\lin.xia\\Documents\\rooomy");
+//        unzip("C:\\Users\\lin.xia\\Documents\\rooomy\\test.zip");
+        zip("C:\\Users\\lin.xia\\Documents\\rooomy\\test");
     }
 
     public static void zip(String zipFileName, String sourceFileName) throws Exception {
-        System.out.println("å‹ç¼©ä¸­...");
+        System.out.println("Ñ¹ËõÖĞ...");
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFileName));
         BufferedOutputStream bos = new BufferedOutputStream(out);
         File sourceFile = new File(sourceFileName);
         compress(out, bos, sourceFile, sourceFile.getName());
         bos.close();
         out.close();
-        System.out.println("å‹ç¼©å®Œæˆ");
+        System.out.println("Ñ¹ËõÍê³É");
+    }
 
+    public static void zip(String sourceFileName) throws Exception {
+        String zipFileName = sourceFileName + ".zip";
+        zip(zipFileName, sourceFileName);
+        FileHelper.deleteDir(sourceFileName);
     }
 
     private static void compress(ZipOutputStream out, BufferedOutputStream bos, File sourceFile, String base) throws Exception {
         if (sourceFile.isDirectory()) {
             File[] flist = sourceFile.listFiles();
-            if (flist.length == 0)//å¦‚æœæ–‡ä»¶å¤¹ä¸ºç©ºï¼Œåˆ™åªéœ€åœ¨ç›®çš„åœ°zipæ–‡ä»¶ä¸­å†™å…¥ä¸€ä¸ªç›®å½•è¿›å…¥ç‚¹
+            if (flist.length == 0)//Èç¹ûÎÄ¼ş¼ĞÎª¿Õ£¬ÔòÖ»ĞèÔÚÄ¿µÄµØzipÎÄ¼şÖĞĞ´ÈëÒ»¸öÄ¿Â¼½øÈëµã
             {
                 System.out.println(base + "/");
                 out.putNextEntry(new ZipEntry(base + "/"));
-            } else//å¦‚æœæ–‡ä»¶å¤¹ä¸ä¸ºç©ºï¼Œåˆ™é€’å½’è°ƒç”¨compressï¼Œæ–‡ä»¶å¤¹ä¸­çš„æ¯ä¸€ä¸ªæ–‡ä»¶ï¼ˆæˆ–æ–‡ä»¶å¤¹ï¼‰è¿›è¡Œå‹ç¼©
+            } else//Èç¹ûÎÄ¼ş¼Ğ²»Îª¿Õ£¬Ôòµİ¹éµ÷ÓÃcompress£¬ÎÄ¼ş¼ĞÖĞµÄÃ¿Ò»¸öÎÄ¼ş£¨»òÎÄ¼ş¼Ğ£©½øĞĞÑ¹Ëõ
             {
                 for (int i = 0; i < flist.length; i++) {
                     compress(out, bos, flist[i], base + "/" + flist[i].getName());
                 }
             }
-        } else//å¦‚æœä¸æ˜¯ç›®å½•ï¼ˆæ–‡ä»¶å¤¹ï¼‰ï¼Œå³ä¸ºæ–‡ä»¶ï¼Œåˆ™å…ˆå†™å…¥ç›®å½•è¿›å…¥ç‚¹ï¼Œä¹‹åå°†æ–‡ä»¶å†™å…¥zipæ–‡ä»¶ä¸­
+        } else//Èç¹û²»ÊÇÄ¿Â¼£¨ÎÄ¼ş¼Ğ£©£¬¼´ÎªÎÄ¼ş£¬ÔòÏÈĞ´ÈëÄ¿Â¼½øÈëµã£¬Ö®ºó½«ÎÄ¼şĞ´ÈëzipÎÄ¼şÖĞ
         {
             out.putNextEntry(new ZipEntry(base));
             FileInputStream fos = new FileInputStream(sourceFile);
@@ -52,6 +60,16 @@ public class ZipHelper {
             bis.close();
             fos.close();
         }
+    }
+
+    public static void unzip(String zipFileName) throws IOException {
+        File zipFile = new File(zipFileName);
+        if (!zipFile.exists()){
+            System.out.println(zipFileName + " not found.");
+            return;
+        }
+        String destFolderName = zipFile.getParent();
+        unzip(zipFileName, destFolderName);
     }
 
     public static void unzip(String zipFileName, String destFileName) throws IOException {
@@ -75,5 +93,6 @@ public class ZipHelper {
             zi.closeEntry();
         }
         zi.close();
+        System.out.println("Unzip successful " + zipFileName );
     }
 }
