@@ -9,7 +9,7 @@ public class Application extends JFrame{
 	private static final long serialVersionUID = 1L;
 
 	public Application() {
-		super("ChangeJsonData-Amazon");
+		super("CLTFConverter");
 		this.getContentPane().add(new MainPage());
 		
 		this.setSize(620,650);

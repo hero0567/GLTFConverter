@@ -56,6 +56,12 @@ public class GltfConvertHelper {
                 }
             }
         }
+        for (String zipFile : zipFiles) {
+            if (zipFile.endsWith(".zip")) {
+                String zipExtractFolder = zipFile.substring(0, zipFile.length() - 4);
+                FileHelper.deleteDir(zipExtractFolder);
+            }
+        }
         log.info("Found zip files number:" + zipFiles.size());
         log.info("Failed convert zip files number:" + failed);
         log.info("Sucess convert zip files number:" + success);
@@ -149,7 +155,9 @@ public class GltfConvertHelper {
         while ((str = in.readLine()) != null) {
             strbuffer.append(str); // new String(str,"UTF-8")
         }
+        inputStreamReader.close();
         in.close();
+        fis.close();
         return strbuffer.toString();
     }
 

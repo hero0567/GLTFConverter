@@ -23,6 +23,8 @@ public class ZipHelper {
         BufferedOutputStream bos = new BufferedOutputStream(out);
         File sourceFile = new File(sourceFileName);
         compress(out, bos, sourceFile, sourceFile.getName());
+        out.flush();
+        bos.flush();
         bos.close();
         out.close();
         System.out.println("Ñ¹ËõÍê³É");
