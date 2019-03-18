@@ -59,43 +59,50 @@
             <groupId>de.javagl</groupId>
             <artifactId>jgltf-browser</artifactId>
             <version>${gltf-version}</version>
+            <scope>system</scope>
             <systemPath>${basedir}/lib/jgltf-browser-2.0.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>de.javagl</groupId>
             <artifactId>jgltf-impl-v1</artifactId>
             <version>${gltf-version}</version>
+            <scope>system</scope>
             <systemPath>${basedir}/lib/jgltf-impl-v1-2.0.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>de.javagl</groupId>
             <artifactId>jgltf-model</artifactId>
             <version>${gltf-version}</version>
+            <scope>system</scope>
             <systemPath>${basedir}/lib/jgltf-model-2.0.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>de.javagl</groupId>
             <artifactId>jgltf-obj</artifactId>
             <version>${gltf-version}</version>
+            <scope>system</scope>
             <systemPath>${basedir}/lib/jgltf-obj-2.0.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>de.javagl</groupId>
             <artifactId>jgltf-viewer</artifactId>
             <version>${gltf-version}</version>
+            <scope>system</scope>
             <systemPath>${basedir}/lib/jgltf-viewer-2.0.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>de.javagl</groupId>
             <artifactId>jgltf-viewer-jogl</artifactId>
             <version>${gltf-version}</version>
+            <scope>system</scope>
             <systemPath>${basedir}/lib/jgltf-viewer-jogl-2.0.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>de.javagl</groupId>
             <artifactId>jgltf-viewer-lwjgl</artifactId>
+            <scope>system</scope>
             <version>${gltf-version}</version>
-            <systemPath>${basedir}/lib/jgltf-viewer-lwjgl-2.0.1-SNAPSHOT.jar</systemPath>
+            <systemPath>${basedir}/lib/jgltf-viewer-jogl-2.0.1-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>de.javagl</groupId>
