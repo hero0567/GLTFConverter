@@ -2,6 +2,7 @@ package com.rooomy.gui;
 
 import com.rooomy.listener.FileChooseListener;
 import com.rooomy.listener.FileDropListener;
+import com.rooomy.util.FileHelper;
 import com.rooomy.util.GltfConvertHelper;
 import com.rooomy.util.LogHelper;
 
@@ -93,6 +94,8 @@ public class MainPage extends JPanel {
                     startBut.setEnabled(false);
                     repaint();
                     new Thread(() -> {
+                        long startTime=System.currentTimeMillis();
+
                         try {
                             boolean backup = backupCheckBox.isSelected();
                             if (dragPath != null && dragPath.isEmpty()) {
@@ -100,11 +103,13 @@ public class MainPage extends JPanel {
                             } else {
                                 GltfConvertHelper.process(dragPath, backup);
                             }
-                            log.info("The operation is done!");
+                            long endTime=System.currentTimeMillis();
+                            log.info("The operation is done " + (endTime-startTime)/1000 + " second!");
                             JOptionPane.showMessageDialog(MainPage.this, "The operation is done!", "Success", JOptionPane.INFORMATION_MESSAGE);
                         } catch (Exception e) {
                             System.out.println(e);
-                            log.info("The operation is abort!");
+                            long endTime=System.currentTimeMillis();
+                            log.info("The operation is abort " + (endTime-startTime)/1000 + " second!");
                             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                         }
                         remove(running_label);

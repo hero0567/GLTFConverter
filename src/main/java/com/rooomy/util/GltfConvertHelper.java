@@ -40,18 +40,21 @@ public class GltfConvertHelper {
         int failed = 0;
         for (String zipFile : zipFiles) {
             if (zipFile.endsWith(".zip")) {
+                long startTime=System.currentTimeMillis();
                 try {
                     String zipExtractFolder = zipFile.substring(0, zipFile.length() - 4);
                     unzip(zipFile);
                     startConvert(zipExtractFolder);
                     zip(zipExtractFolder);
                     success ++;
-                    log.info(ZipHelper.getFileName(zipFile) + "     ok ");
+                    long endTime=System.currentTimeMillis();
+                    log.info(ZipHelper.getFileName(zipFile) + "     ok "+ (endTime-startTime)/1000 + " second");
                     System.out.println("Success convert:" + zipFile);
                 } catch (Exception e) {
                     failed++;
                     System.out.println(e);
-                    log.info(ZipHelper.getFileName(zipFile) + "     fail ");
+                    long endTime=System.currentTimeMillis();
+                    log.info(ZipHelper.getFileName(zipFile) + "     fail "+ (endTime-startTime)/1000 + " second");
                     System.out.println("Failed to convert:" + zipFile);
                 }
             }
@@ -69,7 +72,10 @@ public class GltfConvertHelper {
 
     private static void backup(String input, String backup) throws IOException {
         System.out.println("Start backup:" + input);
+        long startTime=System.currentTimeMillis();
         FileHelper.copyDir(input, backup);
+        long endTime=System.currentTimeMillis();
+        log.info("Copy folder spend " + (endTime-startTime)/1000 + " second");
     }
 
     private static void unzip(String input) throws IOException {
