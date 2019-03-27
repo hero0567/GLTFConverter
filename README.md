@@ -4,7 +4,7 @@ glTF™ (GL Transmission Format) is a royalty-free specification for the efficie
 Please got more information from: https://en.wikipedia.org/wiki/GlTF
 
 ## GLTFConverter
-GLTFConverter is a Java Swing tools to help user automate generate gltf to glb file and resolve cross platform key point relocation changed issue.
+GLTFConverter is a Java Swing tool to help user automate generate gltf to glb file and resolve cross platform key point relocation changed issue.
 GLTFConverter will help user automate unzip, convert, zip to gernerate the final result.
 
 ## Workflow
