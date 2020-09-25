@@ -1,7 +1,5 @@
 package com.rooomy.util;
 
-import com.rooomy.levy.convert.FilterFilesVisitor;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -9,16 +7,25 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.LinkedList;
 import java.util.List;
 
 public class FileHelper {
 
     public static void main(String[] args) throws IOException {
-        String sourcePath = "C:\\Users\\lin.xia\\Documents\\rooomy\\test";
-        String path = "C:\\Users\\lin.xia\\Documents\\rooomy\\test1";
-        copyDir(sourcePath, path);
-        deleteDir(path);
+        String sourcePath = "D:\\work\\GLTFConverter\\resource\\20200925\\≤‚ ‘\\PTRC4NKHFM9NETJ6.zip";
+
+        Path from = Paths.get(sourcePath);
+        Path to = from.getParent().resolve("glb");
+
+        System.out.println("hello");
+    }
+
+    public static void moveFile(Path from, Path to) throws IOException {
+        Files.move(from, to, StandardCopyOption.REPLACE_EXISTING);
+        System.out.println("Move glb from:" + from + ", to:" + to);
+
     }
 
     public static void copyDir(String sourcePath, String destPath) throws IOException {

@@ -7,6 +7,10 @@ Please got more information from: https://en.wikipedia.org/wiki/GlTF
 GLTFConverter is a Java Swing tool to help user automate generate gltf to glb file and resolve cross platform key point relocation changed issue.
 GLTFConverter will help user automate unzip, convert, zip to gernerate the final result.
 
+1. 通过json的包修改gltf里面的值
+2. 通过第三方工具包，通过gltf文件生成glb文件
+3. 替换来的glb文件
+
 ## Workflow
 1. Swing choose a folder user want to convert
 2. Find all zip file in this folder

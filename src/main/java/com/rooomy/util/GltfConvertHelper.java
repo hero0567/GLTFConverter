@@ -8,6 +8,7 @@ import com.rooomy.levy.convert.GltfToGlb;
 import java.io.*;
 import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -94,6 +95,7 @@ public class GltfConvertHelper {
         for (String gltf : gltfs) {
             convertGltf(gltf);
             generateGlb(gltf);
+            moveGlb(gltf);
         }
     }
 
@@ -101,17 +103,17 @@ public class GltfConvertHelper {
     private static void convertGltf(String gltf) throws IOException {
         System.out.println("Start convert gltf:" + gltf);
         String json = readJsonData(gltf);
-        JSONObject dataJson = (JSONObject) JSONObject.parse(json, Feature.OrderedField);// ´´½¨Ò»¸ö°üº¬Ô­Ê¼json´®µÄjson¶ÔÏó
-        JSONArray nodes = dataJson.getJSONArray("nodes");// ÕÒµ½featuresµÄjsonÊý×é
-        JSONArray meshes = dataJson.getJSONArray("meshes");// ÕÒµ½featuresµÄjsonÊý×é
+        JSONObject dataJson = (JSONObject) JSONObject.parse(json, Feature.OrderedField);// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô­Ê¼jsonï¿½ï¿½ï¿½ï¿½jsonï¿½ï¿½ï¿½ï¿½
+        JSONArray nodes = dataJson.getJSONArray("nodes");// ï¿½Òµï¿½featuresï¿½ï¿½jsonï¿½ï¿½ï¿½ï¿½
+        JSONArray meshes = dataJson.getJSONArray("meshes");// ï¿½Òµï¿½featuresï¿½ï¿½jsonï¿½ï¿½ï¿½ï¿½
         JSONObject jsonObject = nodes.getJSONObject(0);
         JSONObject addjsonObject = nodes.getJSONObject(2);
         JSONObject addjsonObject1 = null;
         if (meshes.size() == 2) {
             addjsonObject1 = nodes.getJSONObject(4);
         }
-        JSONArray translation = jsonObject.getJSONArray("translation");// ÕÒµ½featuresµÄjsonÊý×é
-        JSONArray scale = jsonObject.getJSONArray("scale");// ÕÒµ½featuresµÄjsonÊý×é
+        JSONArray translation = jsonObject.getJSONArray("translation");// ï¿½Òµï¿½featuresï¿½ï¿½jsonï¿½ï¿½ï¿½ï¿½
+        JSONArray scale = jsonObject.getJSONArray("scale");// ï¿½Òµï¿½featuresï¿½ï¿½jsonï¿½ï¿½ï¿½ï¿½
         JSONArray addJson = new JSONArray();
         double divide0 = GltfHelper.divide(translation.getDouble(0), scale.getDoubleValue(0));
         if (divide0 > 0 && divide0 < 0.000001) {
@@ -145,6 +147,12 @@ public class GltfConvertHelper {
 
     private static void generateGlb(String gltf) throws IOException {
         GltfToGlb.convert(gltf);
+    }
+
+    private static void moveGlb(String gltf) throws IOException {
+        Path from = Paths.get(gltf).getParent().resolve("ASSET.glb");
+        Path to = Paths.get(gltf).getParent().getParent().resolve("glb").resolve("ASSET.glb");
+        FileHelper.moveFile(from, to);
     }
 
     private static String readJsonData(String pactFile) throws IOException {

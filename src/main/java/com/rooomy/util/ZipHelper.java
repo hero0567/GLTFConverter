@@ -7,6 +7,7 @@ import java.util.zip.ZipOutputStream;
 
 public class ZipHelper {
 
+    private static LogHelper log = LogHelper.getLog();
 
     public static void main(String[] args) throws Exception {
 //        zip("C:\\Users\\lin.xia\\Documents\\rooomy\\test.zip", "C:\\Users\\lin.xia\\Documents\\rooomy\\test");
@@ -27,7 +28,7 @@ public class ZipHelper {
         bos.flush();
         bos.close();
         out.close();
-        System.out.println("压缩完成");
+        System.out.println("压缩完成:" + zipFileName);
     }
 
     public static void zip(String sourceFileName) throws Exception {

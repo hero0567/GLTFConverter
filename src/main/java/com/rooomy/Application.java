@@ -12,14 +12,12 @@ public class Application extends JFrame {
 
     public Application() {
         super("CLTFConverter");
-        if (validLicence()) {
-            this.getContentPane().add(new MainPage());
-            this.setSize(620, 650);
-            this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-            this.setLocationRelativeTo(null);
-            this.setVisible(true);
-            this.setResizable(false);
-        }
+        this.getContentPane().add(new MainPage());
+        this.setSize(620, 650);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);
+        this.setResizable(false);
     }
 
     private boolean validLicence() {
