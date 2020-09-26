@@ -75,6 +75,13 @@
         </dependency>
         <dependency>
             <groupId>de.javagl</groupId>
+            <artifactId>jgltf-impl-v2</artifactId>
+            <version>${gltf-version}</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/jgltf-impl-v2-${gltf-version}.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>de.javagl</groupId>
             <artifactId>jgltf-model</artifactId>
             <version>${gltf-version}</version>
             <scope>system</scope>
